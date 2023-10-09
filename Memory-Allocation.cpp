@@ -1,20 +1,86 @@
-// Memory-Allocation.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
+
+namespace NCL
+{
+	struct Node
+	{
+		int Value;
+		Node* Left = NULL;
+		Node* Right = NULL;
+	};
+
+	Node* CreateNode(const int InValue)
+	{
+		Node* OutNode = new Node;
+		OutNode->Value = InValue;
+		OutNode->Left = NULL;
+		OutNode->Right = NULL;
+		return OutNode;
+	}
+
+	Node* Root = NULL;
+
+	void InsertInteger(Node** InTree, int InValue)
+	{
+		if (*InTree == NULL)
+		{
+			*InTree = CreateNode(InValue);
+			return;
+		}
+
+		if ((*InTree)->Value < InValue)
+		{
+			InsertInteger(&(*InTree)->Left, InValue);
+		}
+		else
+		{
+			InsertInteger(&(*InTree)->Right, InValue);
+		}
+	}
+
+	void PrintTree(Node* InTree)
+	{
+		std::cout << InTree->Value << ',';
+		if (InTree->Left != NULL)
+			PrintTree(InTree->Left);
+
+		if (InTree->Right != NULL)
+			PrintTree(InTree->Right);
+	}
+
+	void TerminateTree(Node* InTree)
+	{
+		if (InTree->Left != NULL)
+			TerminateTree(InTree->Left);
+
+		if (InTree->Right != NULL)
+			TerminateTree(InTree->Right);
+
+		delete InTree;
+		InTree = NULL;
+	}
+
+	int LargestInteger(Node* InTree)
+	{
+		if (InTree->Left == NULL)
+			return InTree->Value;
+		LargestInteger(InTree->Left);
+	}
+}
+
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	std::srand(time(NULL));
+
+	for (int i = 0; i < 10; i++)
+	{
+		NCL::InsertInteger(&NCL::Root, std::rand()%100);
+	}
+
+	NCL::PrintTree(NCL::Root);
+
+	std::cout << "\nLargest integer in the tree is : " << NCL::LargestInteger(NCL::Root);
+
+	return 0;
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
