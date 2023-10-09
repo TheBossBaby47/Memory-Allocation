@@ -9,6 +9,8 @@ namespace NCL
 		Node* Right = NULL;
 	};
 
+	Node* Root = NULL;
+
 	Node* CreateNode(const int InValue)
 	{
 		Node* OutNode = new Node;
@@ -18,8 +20,6 @@ namespace NCL
 		return OutNode;
 	}
 
-	Node* Root = NULL;
-
 	void InsertInteger(Node** InTree, int InValue)
 	{
 		if (*InTree == NULL)
@@ -27,20 +27,20 @@ namespace NCL
 			*InTree = CreateNode(InValue);
 			return;
 		}
-
-		if ((*InTree)->Value < InValue)
+		
+		if (InValue < (*InTree)->Value)
 		{
 			InsertInteger(&(*InTree)->Left, InValue);
+			return;
 		}
-		else
-		{
-			InsertInteger(&(*InTree)->Right, InValue);
-		}
+
+		InsertInteger(&(*InTree)->Right, InValue);
 	}
 
 	void PrintTree(Node* InTree)
 	{
 		std::cout << InTree->Value << ',';
+		
 		if (InTree->Left != NULL)
 			PrintTree(InTree->Left);
 
@@ -60,11 +60,22 @@ namespace NCL
 		InTree = NULL;
 	}
 
+	int MostCommonInteger(Node* InTree)
+	{
+		return 0;
+	}
+
 	int LargestInteger(Node* InTree)
 	{
-		if (InTree->Left == NULL)
+		if (InTree->Right == NULL)
 			return InTree->Value;
-		LargestInteger(InTree->Left);
+		LargestInteger(InTree->Right);
+	}
+
+	int SumOfAllIntegers(Node* InTree)
+	{
+		int OutSum = 0;
+		return	OutSum;
 	}
 }
 
@@ -73,7 +84,7 @@ int main()
 {
 	std::srand(time(NULL));
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		NCL::InsertInteger(&NCL::Root, std::rand()%100);
 	}
@@ -81,6 +92,7 @@ int main()
 	NCL::PrintTree(NCL::Root);
 
 	std::cout << "\nLargest integer in the tree is : " << NCL::LargestInteger(NCL::Root);
+	std::cout << "\nSum of all integer is : " << NCL::SumOfAllIntegers(NCL::Root);
 
 	return 0;
 }
