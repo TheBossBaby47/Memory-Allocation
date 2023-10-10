@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 
 namespace NCL
 {
@@ -60,9 +61,42 @@ namespace NCL
 		InTree = NULL;
 	}
 
+	void InOrderSort(Node* InTree, std::vector<int> *OutSortedArray)
+	{
+		if (InTree->Left != NULL)
+			InOrderSort(InTree->Left, OutSortedArray);
+
+		OutSortedArray->push_back(InTree->Value);
+
+		if (InTree->Right != NULL)
+			InOrderSort(InTree->Right, OutSortedArray);
+	}
+
 	int MostCommonInteger(Node* InTree)
 	{
-		return 0;
+		std::vector<int> TempSortedBST;
+	
+		InOrderSort(InTree, &TempSortedBST);
+		
+		int TempMostCommonInteger = 0;
+		int TempCount = 0;
+		int TempMaxCount = 0;
+
+		for (int i = 1; i < TempSortedBST.size(); i++)
+		{
+			if (TempSortedBST[i - 1] != TempSortedBST[i])
+			{
+				TempCount = 0;
+			}
+
+			if (TempMaxCount < ++TempCount)
+			{
+				TempMaxCount = TempCount;
+				TempMostCommonInteger = TempSortedBST[i];
+			}
+		}
+
+		return TempMostCommonInteger;
 	}
 
 	int LargestInteger(Node* InTree)
@@ -74,8 +108,9 @@ namespace NCL
 
 	int SumOfAllIntegers(Node* InTree)
 	{
-		int OutSum = 0;
-		return	OutSum;
+		if (InTree == NULL) return 0;
+
+		return InTree->Value + SumOfAllIntegers(InTree->Left) + SumOfAllIntegers(InTree->Right) ;
 	}
 }
 
@@ -84,15 +119,15 @@ int main()
 {
 	std::srand(time(NULL));
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 10; i++)
 	{
-		NCL::InsertInteger(&NCL::Root, std::rand()%100);
+		NCL::InsertInteger(&NCL::Root, std::rand()%10);
 	}
 
 	NCL::PrintTree(NCL::Root);
 
 	std::cout << "\nLargest integer in the tree is : " << NCL::LargestInteger(NCL::Root);
 	std::cout << "\nSum of all integer is : " << NCL::SumOfAllIntegers(NCL::Root);
-
+	std::cout << "\nMost common integer is : " << NCL::MostCommonInteger(NCL::Root);
 	return 0;
 }
